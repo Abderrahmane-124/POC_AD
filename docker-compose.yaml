@@ -1,0 +1,17 @@
+services:
+  samba:
+    image: diegogslomp/samba-ad-dc
+    privileged: true
+    environment:
+      # The Kerberos realm / full Active Directory DNS domain name
+      - REALM=LOCALHOST.LOCALDOMAIN
+      # The NetBIOS name / Windows legacy domain identifier
+      - DOMAIN=LOCALHOST
+      - ADMIN_PASS=Devsecops@mcl2026
+      # DNS server Samba will query when it cannot resolve something itself
+      - DNS_FORWARDER=127.0.0.1
+    network_mode: host
+    volumes:
+      - smb:/var/lib/samba/data
+volumes:
+  smb:
