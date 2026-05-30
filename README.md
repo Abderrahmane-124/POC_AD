@@ -50,3 +50,33 @@ AD s'appuie sur trois protocoles majeurs.
   - Permettre à des prestataires de se connecter via leur compte GitHub ou Google (Social Login).
 
   - Ajouter nativement du MFA (Google Authenticator, YubiKey) pour tout le monde, sans toucher à la configuration de l'AD.
+
+# Debut du POC
+## 0- Mise en place d'un environement
+> Voire `docker-compose.yaml`
+- configurer `samba` (Active directory domain controller)
+- configurer `keyclock`
+## 1- Peuplement de l'AD
+```bash
+# Créer l'OU pour ranger les utilisateurs
+samba-tool ou add "OU=lab-users"
+
+# Créer l'OU pour ranger les groupes
+samba-tool ou add "OU=lab-groups"
+
+# Créer l'OU pour ranger les compt de services (pour keyclock et vault)
+samba-tool ou add "OU=lab-user-service"
+
+# creer les utilisateurs et les ajouter dans leurs OU
+samba-tool user create svc_keycloak Password@123 --description="Compte de lecture pour Keycloak" --userou="OU=lab-user-service"
+samba-tool user create a.elb Password@123 --userou="OU=lab-users"
+samba-tool user create h.ait Password@123 --userou="OU=lab-users"
+
+# creer les groupes et les ajouter dans leurs OU
+samba-tool group add Admins_DevSecOps --groupou="OU=lab-groups"
+samba-tool group add Devs --groupou="OU=lab-groups"
+
+# ajouter les users a leur groups
+samba-tool group addmembers Admins_DevSecOps a.elb
+samba-tool group addmembers Devs h.ait
+```
