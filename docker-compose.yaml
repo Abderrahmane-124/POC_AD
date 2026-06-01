@@ -15,7 +15,8 @@ services:
       - samba_network
     volumes:
       - smb:/var/lib/samba
-      - smb_etc:/etc/samba
+      - ./samba-entrypoint.sh:/samba-entrypoint.sh:ro
+    entrypoint: ["/bin/bash", "/samba-entrypoint.sh"] 
 
   # phpLDAPadmin:
   #   image: phpldapadmin/phpldapadmin
@@ -33,9 +34,9 @@ services:
   #   depends_on:
   #     - samba
 
-  keyclock:
+  keycloak:
     image: keycloak/keycloak:26.6
-    container_name: keyclock
+    container_name: keycloak
     environment:
       - KC_BOOTSTRAP_ADMIN_USERNAME=admin
       - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
@@ -54,5 +55,4 @@ networks:
     
 volumes:
   smb:
-  smb_etc:
   keycloak_data:

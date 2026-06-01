@@ -34,7 +34,7 @@ AD s'appuie sur trois protocoles majeurs.
 
 - **Le Problème (L'enfer des mots de passe) :** Dans une stack DevSecOps (GitLab, Grafana, ArgoCD...), si chaque outil est branché directement en LDAP à l'AD, l'utilisateur doit retaper ses identifiants à chaque ouverture de page. L'AD subit alors une charge de requêtes énorme.
 
-- **La Solution Keycloak (Le véritable SSO) :** Keycloak s'intercale en tant que fournisseur d'identité central (IdP). L'utilisateur se connecte une seule fois sur la page de Keycloak. Ensuite, c'est Keycloak qui distribue les accès (Tokens) à GitLab, Grafana ou ArgoCD sans que l'utilisateur n'ait à se reconnecter.
+- **La Solution Keycloak (SSO via Redirection) :** Keycloak s'intercale en tant que fournisseur d'identité central (IdP). L'utilisateur se connecte une seule fois sur la page de Keycloak. Ensuite, c'est Keycloak qui distribue les accès (Tokens) à GitLab, Grafana ou ArgoCD sans que l'utilisateur n'ait à se reconnecter.
 
 ### Limite 3 : L'AD est rigide face aux utilisateurs externes
 - L'AD est la base de données interne de l'entreprise (les employés).
