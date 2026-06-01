@@ -1,6 +1,7 @@
 services:
   samba:
     image: diegogslomp/samba-ad-dc
+    container_name: samba
     privileged: true
     environment:
       # The Kerberos realm / full Active Directory DNS domain name
@@ -16,24 +17,25 @@ services:
       - smb:/var/lib/samba
       - smb_etc:/etc/samba
 
-  phpLDAPadmin:
-    image: phpldapadmin/phpldapadmin
-    environment:
-      - LDAP_SERVER_NAME=Samba AD DC
-      - LDAP_SERVER_HOST=samba
-      - LDAP_SERVER_PORT=389
-      - LDAP_SERVER_BIND_ID=cn=Administrator,cn=Users,dc=corp,dc=localdomain
-      - LDAP_SERVER_BASE_DN=dc=corp,dc=localdomain
-      - LDAP_SERVER_HTTPS=false
-    ports:
-      - "6443:80"
-    networks:
-      - samba_network
-    depends_on:
-      - samba
+  # phpLDAPadmin:
+  #   image: phpldapadmin/phpldapadmin
+  #   environment:
+  #     - LDAP_SERVER_NAME=Samba AD DC
+  #     - LDAP_SERVER_HOST=samba
+  #     - LDAP_SERVER_PORT=389
+  #     - LDAP_SERVER_BIND_ID=cn=Administrator,cn=Users,dc=corp,dc=localdomain
+  #     - LDAP_SERVER_BASE_DN=dc=corp,dc=localdomain
+  #     - LDAP_SERVER_HTTPS=false
+  #   ports:
+  #     - "6443:80"
+  #   networks:
+  #     - samba_network
+  #   depends_on:
+  #     - samba
 
   keyclock:
     image: keycloak/keycloak:26.6
+    container_name: keyclock
     environment:
       - KC_BOOTSTRAP_ADMIN_USERNAME=admin
       - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
