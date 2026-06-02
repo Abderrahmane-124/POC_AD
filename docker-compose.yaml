@@ -2,6 +2,7 @@ services:
   samba:
     image: diegogslomp/samba-ad-dc
     container_name: samba
+    hostname: samba
     privileged: true
     environment:
       # The Kerberos realm / full Active Directory DNS domain name
@@ -11,12 +12,12 @@ services:
       - ADMIN_PASS=Devsecops@mcl2026
       # DNS server Samba will query when it cannot resolve something itself
       - DNS_FORWARDER=8.8.8.8
+      # This overrides the strict binding, forcing Samba to listen on 0.0.0.0 so other containers can reach it
+      - BIND_NETWORK_INTERFACES=false
     networks:
       - samba_network
     volumes:
       - smb:/var/lib/samba
-      - ./samba-entrypoint.sh:/samba-entrypoint.sh:ro
-    entrypoint: ["/bin/bash", "/samba-entrypoint.sh"] 
 
   # phpLDAPadmin:
   #   image: phpldapadmin/phpldapadmin
