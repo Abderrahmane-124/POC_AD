@@ -61,3 +61,27 @@ AD s'appuie sur trois protocoles majeurs.
 # en wsl
 ./init-samba-data.sh
 ```
+## 2- Configuration entre Keycloak et Samba
+### 2-1 Creation de Realm
+> Bonne pratique de creer un realm pour isoler comme on le souhaite
+
+![alt text](screenshots\image.png)
+
+### 2-2 Configurer l'acces a l'AD
+> User federation permet d'ajouter AD comme source de donnees externe.
+
+>`User federation > Add LDAP provider`
+
+```
+Vendor : Active Directory
+# samba est definit comme nom de domain car le fichier docker compose definit un reseau de type bridge, et le nom du conteneur est samba 
+Connection URL : ldap://samba:389
+
+Bind type : simple
+# ici on utilise le compt admin de samba (car il a les drouts read/writs)
+Bind DN : CN=Administrator,CN=Users,DC=corp,DC=localdomain
+# mot de passe definint dans le fichier docker compose
+Bind credentials : Devsecops@mcl2026
+
+Edit mode : WRITABLE
+```
