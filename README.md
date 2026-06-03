@@ -65,8 +65,7 @@ AD s'appuie sur trois protocoles majeurs.
 ### 2-1 Creation de Realm
 > Bonne pratique de creer un realm pour isoler comme on le souhaite
 
-![alt text](screenshots\image.png)
-
+![alt text](<screenshots/Screenshot 2026-06-03 112531.png>)
 ### 2-2 Configurer l'acces a l'AD
 > User federation permet d'ajouter AD comme source de donnees externe.
 
