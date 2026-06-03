@@ -70,18 +70,22 @@ AD s'appuie sur trois protocoles majeurs.
 ### 2-2 Configurer l'acces a l'AD
 > User federation permet d'ajouter AD comme source de donnees externe.
 
->`User federation > Add LDAP provider`
+`User federation > Add LDAP provider`
 
-```
-Vendor : Active Directory
-# samba est definit comme nom de domain car le fichier docker compose definit un reseau de type bridge, et le nom du conteneur est samba 
-Connection URL : ldap://samba:389
+![alt text](<screenshots/Screenshot 2026-06-03 094812.png>)
+![alt text](<screenshots/Screenshot 2026-06-03 094837.png>)
+![alt text](<screenshots/Screenshot 2026-06-03 094902.png>)
 
-Bind type : simple
-# ici on utilise le compt admin de samba (car il a les drouts read/writs)
-Bind DN : CN=Administrator,CN=Users,DC=corp,DC=localdomain
-# mot de passe definint dans le fichier docker compose
-Bind credentials : Devsecops@mcl2026
+### 2-3 Creation des Mappers
+> Un mapper est un traducteur entre 2 systemes de base de donnees (entre l'AD et Keycloak)
 
-Edit mode : WRITABLE
-```
+> On l'utilise car l'AD et keycloak utilisent des noms differents pour les memes concepts
+
+On a creer 2 mappers : `username` et `cn mapper`
+
+- `username` mappe le username 
+- `cn mapper` mappe le chemin (cn) dans lequel le user sera enregistré dans la base de donnee de l'AD
+
+![alt text](<screenshots/Screenshot 2026-06-03 105423.png>)
+![alt text](<screenshots/Screenshot 2026-06-03 105447.png>)
+
