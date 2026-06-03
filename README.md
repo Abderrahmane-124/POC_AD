@@ -61,7 +61,7 @@ AD s'appuie sur trois protocoles majeurs.
 # en wsl
 ./init-samba-data.sh
 ```
-## 2- Configuration entre Keycloak et Samba
+## 2- Configuration & synchronisation entre Keycloak et Samba
 ### 2-1 Creation de Realm
 > Bonne pratique de creer un realm pour isoler comme on le souhaite
 
@@ -88,3 +88,11 @@ On a creer 2 mappers : `username` et `cn mapper`
 ![alt text](<screenshots/Screenshot 2026-06-03 105423.png>)
 ![alt text](<screenshots/Screenshot 2026-06-03 105447.png>)
 
+> Desormait les users sont synchronisés entre Keycloak et Samba
+
+## 3- Authentification des utilisateurs 
+Dans cette architecture, Keycloak sert de passerelle (Identity Provider) :
+- L'utilisateur clique sur "Log in with Keycloak" sur SonarQube.
+- SonarQube redirige l'utilisateur vers Keycloak via SAML.
+- Keycloak vérifie les identifiants en interrogeant votre conteneur Samba AD (via la synchronisation LDAP que nous avons configurée).
+- Keycloak renvoie le jeton d'authentification et les groupes (Admins_DevSecOps, Devs) à SonarQube.
