@@ -70,15 +70,16 @@ AD s'appuie sur trois protocoles majeurs.
 > User federation permet d'ajouter AD comme source de donnees externe.
 
 `User federation > Add LDAP provider`
-
-![alt text](<screenshots/Screenshot 2026-06-03 094812.png>)
+![alt text](<screenshots/Screenshot 2026-06-04 095708.png>)
 ![alt text](<screenshots/Screenshot 2026-06-03 094837.png>)
 ![alt text](<screenshots/Screenshot 2026-06-03 094902.png>)
 
-### 2-3 Creation des Mappers
+### 2-3 Creation des Mappers (optionnel non recommandé)
 > Un mapper est un traducteur entre 2 systemes de base de donnees (entre l'AD et Keycloak)
 
-> On l'utilise car l'AD et keycloak utilisent des noms differents pour les memes concepts
+> Si on le l'utilise pas, la sync AD -> Keycloak c'est ok , mais la sync Keycloak -> AD le username parait hache dans l'AD ($888AC9C5-10008ECD7A2F3460)
+
+> l'AD et keycloak utilisent des noms differents pour les memes concepts
 
 On a creer 2 mappers : `username` et `cn mapper`
 
@@ -96,3 +97,6 @@ Dans cette architecture, Keycloak sert de passerelle (Identity Provider) :
 - SonarQube redirige l'utilisateur vers Keycloak via SAML.
 - Keycloak vérifie les identifiants en interrogeant votre conteneur Samba AD (via la synchronisation LDAP que nous avons configurée).
 - Keycloak renvoie le jeton d'authentification et les groupes (Admins_DevSecOps, Devs) à SonarQube.
+
+> Documentation : https://docs.sonarsource.com/sonarqube-community-build/instance-administration/authentication/saml/how-to-set-up-keycloak
+

@@ -20,7 +20,7 @@ services:
       - smb:/var/lib/samba
 
   keycloak:
-    image: keycloak/keycloak:26.6
+    image: keycloak/keycloak:26.3
     container_name: keycloak
     environment:
       - KC_BOOTSTRAP_ADMIN_USERNAME=admin
@@ -31,7 +31,8 @@ services:
     networks:
       - samba_network
     volumes:
-      - keycloak_data:/opt/keycloak/data
+      # - keycloak_data:/opt/keycloak/data       # volume for version keycloak/keycloak:26.6 already full
+      - keycloak_data_26.3:/opt/keycloak/data
 
   sonarqube:
     # password: Password@123
@@ -50,5 +51,5 @@ networks:
     
 volumes:
   smb:
-  keycloak_data:
+  keycloak_data_26.3:
   sonarqube_data:

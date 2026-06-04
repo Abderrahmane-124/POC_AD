@@ -23,5 +23,6 @@ $DOCKER_EXEC samba-tool group add Devs --groupou="OU=lab-groups"
 # ajouter les users a leur groups
 $DOCKER_EXEC samba-tool group addmembers Admins_DevSecOps a.elb
 $DOCKER_EXEC samba-tool group addmembers Devs h.ait
+$DOCKER_EXEC samba-tool group addmembers "Account Operators" svc_keycloak
 
 
