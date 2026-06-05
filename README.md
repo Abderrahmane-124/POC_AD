@@ -74,29 +74,74 @@ AD s'appuie sur trois protocoles majeurs.
 ![alt text](<screenshots/Screenshot 2026-06-03 094837.png>)
 ![alt text](<screenshots/Screenshot 2026-06-03 094902.png>)
 
-### 2-3 Creation des Mappers (optionnel non recommandé)
+### 2-3 Creation des Mappers 
 > Un mapper est un traducteur entre 2 systemes de base de donnees (entre l'AD et Keycloak)
-
-> Si on le l'utilise pas, la sync AD -> Keycloak c'est ok , mais la sync Keycloak -> AD le username parait hache dans l'AD ($888AC9C5-10008ECD7A2F3460)
 
 > l'AD et keycloak utilisent des noms differents pour les memes concepts
 
-On a creer 2 mappers : `username` et `cn mapper`
+> On creee un group mapper pour pouvoir importer les groups des utilisateurs depuis l'AD
+```
+Name : groups mapper
+Mapper type : group-ldap-mapper
+LDAP Groups DN : OU=lab-groups,DC=corp,DC=localdomain
+Group Name LDAP Attribute : cn
+Group Object Classes : group
+Preserve Group Inheritance : Off
+Ignore Missing Groups : Off
+Membership LDAP Attribute : member
+Membership Attribute Type : DN
+Membership User LDAP Attribute : sAMAccountName
+Mode : READ_ONLY
+User Groups Retrieve Strategy : LOAD_GROUPS_BY_MEMBER_ATTRIBUTE
+```
+Maintenant on force la synchronisation : en haut a droite de la page de ce mapper Action -> Sync LDAP groups to Keycloak
 
-- `username` mappe le username 
-- `cn mapper` mappe le chemin (cn) dans lequel le user sera enregistré dans la base de donnee de l'AD
+Puis verifier dans l'onglet Groups
 
-![alt text](<screenshots/Screenshot 2026-06-03 105423.png>)
-![alt text](<screenshots/Screenshot 2026-06-03 105447.png>)
-
-> Desormait les users sont synchronisés entre Keycloak et Samba
-
-## 3- Authentification des utilisateurs 
+## 3- Authentification et Autorisations des utilisateurs 
 Dans cette architecture, Keycloak sert de passerelle (Identity Provider) :
-- L'utilisateur clique sur "Log in with Keycloak" sur SonarQube.
-- SonarQube redirige l'utilisateur vers Keycloak via SAML.
-- Keycloak vérifie les identifiants en interrogeant votre conteneur Samba AD (via la synchronisation LDAP que nous avons configurée).
-- Keycloak renvoie le jeton d'authentification et les groupes (Admins_DevSecOps, Devs) à SonarQube.
+- Redirection (SAML Request) : L'utilisateur tente de se connecter ; SonarQube le redirige vers Keycloak.
+- Authentification (LDAP Bind) : Keycloak valide les identifiants saisis en interrogeant directement Samba AD.
+- Collecte des attributs : Keycloak lit les groupes AD de l'utilisateur (ex: Admins_DevSecOps).
+- Jeton Signé (SAML Response) : Keycloak crée un jeton cryptographique contenant l'identité et les groupes, puis renvoie l'utilisateur vers SonarQube.
+- Vérification de sécurité : SonarQube valide la signature du jeton grâce au certificat public de Keycloak.
+- Création à la volée (JIT) : Si c'est sa première connexion, SonarQube crée le profil de l'utilisateur instantanément.
+- Autorisation (RBAC) : SonarQube fait correspondre les groupes du jeton avec ses groupes locaux et applique les droits finaux.
 
 > Documentation : https://docs.sonarsource.com/sonarqube-community-build/instance-administration/authentication/saml/how-to-set-up-keycloak
+
+### Dans Keycloak
+#### 1- creer un client SAML 
+> SAML car sonarqube le support
+```
+Client ID : sonarqube
+Valid redirect URIs : http://localhost:9000/oauth2/callback/saml
+```
+#### 2- creer des Mappers pour ce client
+Clients -> sonarqube -> Client scopes -> sonarqube-dedicated -> Add mapper
+On creee 3 mappers 
+```
+# Mapper 1 
+Mapper type : User Property
+Name : name
+Property : Username
+SAML Attribute Name : name
+
+# Mapper 2
+Mapper type : User Property
+Name : login
+Property : Username
+SAML Attribute Name : login
+
+# Mapper 3
+Mapper type : Group list
+Name : Groups
+Group attribute name : groups
+Single Group Attribute : On
+Full group path : Off
+```
+### Dans Sonarqube
+
+Administration > Configuration > General Settings > Authentication > SAML > Create Configuration
+
 
