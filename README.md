@@ -144,4 +144,31 @@ Full group path : Off
 
 Administration > Configuration > General Settings > Authentication > SAML > Create Configuration
 
+```
+Application ID : sonarqube
 
+Provider name : SAML
+
+# The value of the EntityDescriptor > entityID attribute in the IdP metadata file. 
+# This can be found in Keycloak in Your realm > Realm settings > General > SAML 2.0 Identity Provider Metadata
+Provider ID : http://localhost:8081/realms/POC   
+
+# The value of SingleSignOnService > Location attribute in the IdP metadata file. 
+# This can be found in Keycloak in Your realm > Realm settings > General > SAML 2.0 Identity Provider Metadata.
+SAML login URL : http://localhost:8081/realms/POC/protocol/saml
+
+# Copy-paste the realm’s certificate. It can be found in Keycloak:
+# In Your realm > Realm settings > General > SAML 2.0 Identity Provider Metadata.
+# or in Your realm > Realm Settings > Keys > RS256 and select Certificate
+Identity provider certificate : 
+
+SAML user login attribute : login
+
+SAML user name attribute : name
+
+SAML user email attribute : email
+
+SAML group attribute : groups
+
+Sign requests : off
+```
