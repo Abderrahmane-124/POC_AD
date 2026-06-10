@@ -99,6 +99,7 @@ Maintenant on force la synchronisation : en haut a droite de la page de ce mappe
 Puis verifier dans l'onglet Groups
 
 ## 3- Authentification et Autorisations des utilisateurs 
+## Sonarqube
 Dans cette architecture, Keycloak sert de passerelle (Identity Provider) :
 - Redirection (SAML Request) : L'utilisateur tente de se connecter ; SonarQube le redirige vers Keycloak.
 - Authentification (LDAP Bind) : Keycloak valide les identifiants saisis en interrogeant directement Samba AD.
@@ -111,6 +112,7 @@ Dans cette architecture, Keycloak sert de passerelle (Identity Provider) :
 > Documentation : https://docs.sonarsource.com/sonarqube-community-build/instance-administration/authentication/saml/how-to-set-up-keycloak
 
 ### Dans Keycloak
+> Avant tout on crée les groups (meme nom exact que les grps dans l'AD) et on leur attribue les droits, l'ajout des users dans leurs groups se fait automatiquement
 #### 1- creer un client SAML 
 > SAML car sonarqube le support
 ```
@@ -171,4 +173,40 @@ SAML user email attribute : email
 SAML group attribute : groups
 
 Sign requests : off
+```
+
+## Grafana
+> Avant tout on crée les groups (meme nom exact que les grps dans l'AD) et on leur attribue les droits, l'ajout des users dans leurs groups se fait automatiquement
+
+### Dans Keycloak
+#### 1- Creer un client OpenID
+```
+Client ID : grafana-oauth
+
+# Optionnel, pour avoir le lien de Grafana dans keycloak
+Home URL : http://localhost:3000
+Valid redirect URIs : http://localhost:3000/login/generic_oauth
+Client authentication : On
+Authorization : On
+Authentication flow : Standard flow / Direct access grants
+```
+#### 2- Creer un mapper
+```
+Mapper type : Group Membership
+Token Claim Name : groups
+Full group path : Off
+Add to ID token : On
+Add to access token : On
+Add to userinfo : On
+```
+### Dans Grafana
+Administration > Authentication > Generic OAuth
+```
+Client ID : grafana-oauth
+Client secret : (get it from keycloak, go to the grafana client details)
+Scopes : openid - offline_access - roles - profile - email
+Auth URL : http://localhost:8081/realms/POC/protocol/openid-connect/auth
+Token URL : http://keycloak:8080/realms/POC/protocol/openid-connect/token
+API URL : http://keycloak:8080/realms/POC/protocol/openid-connect/userinfo
+Allow sign up : on
 ```

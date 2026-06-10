@@ -13,9 +13,9 @@ $DOCKER_EXEC samba-tool ou add "OU=lab-user-service"
 
 # creer les utilisateurs et les ajouter dans leurs OU
 $DOCKER_EXEC samba-tool user create svc_keycloak Password@123 --description="Compte de lecture pour Keycloak" --userou="OU=lab-user-service"
-$DOCKER_EXEC samba-tool user create a.elb Password@123 --userou="OU=lab-users"
-$DOCKER_EXEC samba-tool user create h.ait Password@123 --userou="OU=lab-users"
-$DOCKER_EXEC samba-tool user create h.idr Password@123 --userou="OU=lab-users"
+$DOCKER_EXEC samba-tool user create a.elb Password@123 --userou="OU=lab-users" --mail-address="elb@poc.local"
+$DOCKER_EXEC samba-tool user create h.ait Password@123 --userou="OU=lab-users" --mail-address="ait@poc.local"
+$DOCKER_EXEC samba-tool user create h.idr Password@123 --userou="OU=lab-users" --mail-address="idr@poc.local"
 
 # creer les groupes et les ajouter dans leurs OU
 $DOCKER_EXEC samba-tool group add Admins_DevSecOps --groupou="OU=lab-groups"

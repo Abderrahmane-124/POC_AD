@@ -45,6 +45,19 @@ services:
     volumes:
       - sonarqube_data:/opt/sonarqube/data
 
+  grafana:
+    # password: Password@123
+    image: grafana/grafana
+    container_name: grafana
+    environment:
+      - GF_AUTH_OAUTH_ALLOW_INSECURE_EMAIL_LOOKUP=true
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - samba_network
+
 networks:
   samba_network:
     driver: bridge
@@ -53,3 +66,4 @@ volumes:
   smb:
   keycloak_data_26.3:
   sonarqube_data:
+  grafana_data:
