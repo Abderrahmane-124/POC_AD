@@ -209,4 +209,7 @@ Auth URL : http://localhost:8081/realms/POC/protocol/openid-connect/auth
 Token URL : http://keycloak:8080/realms/POC/protocol/openid-connect/token
 API URL : http://keycloak:8080/realms/POC/protocol/openid-connect/userinfo
 Allow sign up : on
+
+# En dessous de User mapping
+Role attribute path : contains(groups[*], 'Admins_DevSecOps') && 'Admin' || contains(groups[*], 'Devs') && 'Editor' || 'Viewer'
 ```
