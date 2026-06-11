@@ -58,6 +58,17 @@ services:
     networks:
       - samba_network
 
+  terraform:
+    image: hashicorp/terraform:1.15.6
+    container_name: terraform
+    working_dir: /workspace
+    volumes:
+      - ./keycloak-terraform:/workspace
+    profiles:
+      - "cli-tools"
+    networks:
+      - samba_network
+
 networks:
   samba_network:
     driver: bridge
