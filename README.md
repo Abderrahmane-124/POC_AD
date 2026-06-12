@@ -213,3 +213,7 @@ Allow sign up : on
 # En dessous de User mapping
 Role attribute path : contains(groups[*], 'Admins_DevSecOps') && 'Admin' || contains(groups[*], 'Devs') && 'Editor' || 'Viewer'
 ```
+
+
+# Terraform
+`docker compose run terraform apply`
