@@ -31,7 +31,6 @@ services:
     networks:
       - samba_network
     volumes:
-      # - keycloak_data:/opt/keycloak/data       # volume for version keycloak/keycloak:26.6 already full
       - keycloak_data_26.3:/opt/keycloak/data
 
   sonarqube:
